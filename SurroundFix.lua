@@ -30,7 +30,7 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially 
 
 	local rateLimit = 0.5 --Min time between the script being invoked from an event call
 
-	function sfixMain() --Main function
+	function uiResolution()
 		fixY = GetScreenHeight() --Get the Vertical resolution of the setup
 		fixX = GetScreenWidth() --Get the Horizontal resolution of the setup
 		fixYdiv = fixY/9
@@ -38,23 +38,28 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially 
 
 		if fixX > (fixYdiv*21) then --If it's bigger than a 21:9 monitor (so multiple monitors)
 
-       		if GetScreenWidth() >= (fixYdiv*53) then --Figure out if at least one display is Ultrawide
-       			fixX = (fixYdiv*21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
-       			aspect = "21:9"
-       		elseif GetScreenWidth() == (fixYdiv*36) then --Figure out if all 3 displays are 4:3
-       			fixX = (fixYdiv*12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
-       			aspect = "4:3"
-       		else
-       			fixX = (fixYdiv*16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
-       			aspect = "16:9"
-       		end
+			if GetScreenWidth() >= (fixYdiv*53) then --Figure out if at least one display is Ultrawide
+				fixX = (fixYdiv*21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
+				aspect = "21:9"
+			elseif GetScreenWidth() == (fixYdiv*36) then --Figure out if all 3 displays are 4:3
+				fixX = (fixYdiv*12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
+				aspect = "4:3"
+			else
+				fixX = (fixYdiv*16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
+				aspect = "16:9"
+			end
 		end
+	end
+
+	function sfixMain() --Main function
+
 
        	local coreSet
        	hooksecurefunc(UIParent, "SetPoint", function(self) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
        		if coreSet then --Makes it so that if coreSet is true, it doesn't run the changes.
        			return
        		end
+			uiResolution()
        		coreSet = true --Sets coreSet to true so it doesn't trigger from itsself
        		self:SetSize(fixX, fixY) --self is UIParent since that's what the hook is
        		self:ClearAllPoints()
@@ -62,28 +67,35 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially 
        		coreSet = nil
        	end)
 
-    	UIParent:SetPoint("CENTER") --This forces the hook to run at least once to actually set the fix
+--    	UIParent:SetPoint("CENTER") --This forces the hook to run at least once to actually set the fix
 
 	end
 
-	function sfixAnnounce() --Chatspam function
-			print("~Surround Fix~")
+--	function sfixAnnounce() --Chatspam function
+--			print("~Surround Fix~")
+--
+--		if GetScreenWidth() <= (fixYdiv*21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
+--			print("Single display detected")
+--		else
+--			print("Middle display detected as", aspect)
+--		end
+--
+--			print("Setting UI Resolution to", floor(fixX+0.5),"x",floor(fixY+0.5))
+--
+--	end
 
-		if GetScreenWidth() <= (fixYdiv*21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
-			print("Single display detected")
-		else
-			print("Middle display detected as", aspect)
-		end
-
-			print("Setting UI Resolution to", floor(fixX+0.5),"x",floor(fixY+0.5))
-
+	if event == "PLAYER_LOGIN" then
+		sfixMain()
 	end
 
     if event == "PLAYER_LOGIN" or event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when the events happen
 		eventUnregister() --Unregister the events so it doesn't spam
-		C_Timer.After(0.1, function() sfixMain() end) --Run the main code after 0.1 seconds to prevent issues
+		sfixMain()
+		UIParent:SetPoint("CENTER")
 
-		C_Timer.After(rateLimit, function() eventRegister() sfixMain() sfixAnnounce() end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
+		C_Timer.After(0.1, function() UIParent:SetPoint("CENTER") end) --Run the main code after 0.1 seconds to prevent issues
+
+		C_Timer.After(rateLimit, function() eventRegister() end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
 
     end
 end)
