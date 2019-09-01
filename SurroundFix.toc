@@ -1,6 +1,6 @@
 ## Interface: 80000
 ## Title: SurroundFix
-## Version: 1.04
+## Version: 2.0
 ## Notes: A fix for the Interface when running triple monitor resolutions.
 ## Author: Jademalo
 
