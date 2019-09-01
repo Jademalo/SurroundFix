@@ -3,9 +3,9 @@
 --------------------------------------------------------------------------------
 local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
 local rateLimit = 0.1 --Min time between the script being invoked from an event call
-local fixY --Get the Vertical resolution of the setup
-local fixX --Get the Horizontal resolution of the setup
-local fixYdiv
+local fixY = 1 --Get the Vertical resolution of the setup
+local fixX = 1 --Get the Horizontal resolution of the setup
+local fixYdiv = 1
 local aspect = "unknown"
 local coreSet
 local parentDefault = true
@@ -62,12 +62,10 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
 
 	if GetScreenWidth() <= (fixYdiv*21) and parentDefault then --If it's smaller than or equal to a 21:9 monitor (so single monitor), do nothing until it's been changed.
 		coreSet = nil
-		sfixAnnounce()
 		return
 	end
 
 	parentDefault = nil --Set this to nil forever, since there's no longer the default UIParent behaviour
-	sfixAnnounce()
 	self:SetSize(fixX, fixY) --self is UIParent since that's what the hook is
 	self:ClearAllPoints()
 	self:SetPoint("CENTER")
@@ -82,6 +80,7 @@ end
 --------------------------------------------------------------------------------
 sfixFrame:RegisterEvent("ADDON_LOADED")
 sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
+sfixFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 
 
 
@@ -94,11 +93,17 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially 
 		sfixFrame:UnregisterEvent("ADDON_LOADED")
 		hooksecurefunc(UIParent, "SetPoint", UIParentHook)--Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
 		hooksecurefunc(UIParent, "SetScale", UIParentHook) --Hooks into UIParent "SetScale", so if anything tries to change that then it runs
+		sfixAnnounce()
+--		hooksecurefunc(CombatText, "CombatText_UpdateDisplayedMessages", combatTextHook)
+	end
+
+	if event == "PLAYER_REGEN_ENABLED" then
+		UIParent:SetPoint("CENTER") --Fires the hook after leaving combat, to fix it if it happens during combat
 	end
 
     if event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when the events happen
 		sfixFrame:UnregisterEvent("DISPLAY_SIZE_CHANGED") --Unregister the events so it doesn't spam
-		C_Timer.After(rateLimit, function() UIParent:SetPoint("CENTER") sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
+		C_Timer.After(rateLimit, function() UIParent:SetPoint("CENTER") sfixAnnounce() sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
 
     end
 
