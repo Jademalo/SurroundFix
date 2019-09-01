@@ -1,6 +1,6 @@
 ## Interface: 80200
 ## Title: Surround Fix
-## Version: 2.1
+## Version: 3.0
 ## Notes: A fix for the Interface when running triple monitor resolutions.
 ## Author: Jademalo
 
