@@ -1,4 +1,5 @@
 local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
+sfixFrame:RegisterEvent("ADDON_LOADED")
 sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED")
 
 sfixFrame:SetScript("OnEvent", function(self, event, ...)
@@ -7,7 +8,7 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...)
 	local fixX
 	local aspect
 
-    if event == "DISPLAY_SIZE_CHANGED" then
+    if event == "DISPLAY_SIZE_CHANGED" or if event == "ADDON_LOADED" then
        	if GetScreenWidth() <= (fixYdiv*21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), do nothing.
        		print("SurroundFix - Single display detected")
        		return
