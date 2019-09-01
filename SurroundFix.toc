@@ -1,0 +1,7 @@
+## Interface: 80000
+## Title: SurroundFix
+## Version: 1.03
+## Notes: A fix for the Interface when running triple monitor resolutions.
+## Author: Jademalo
+
+SurroundFix.lua
