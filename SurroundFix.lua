@@ -1,17 +1,31 @@
-local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
+local AddonName = ...
 
-    sfixFrame:RegisterEvent("PLAYER_LOGIN")
-    sfixFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-    sfixFrame:RegisterEvent("ADDON_LOADED")
-	sfixFrame:RegisterEvent("PLAYER_ALIVE")
-	sfixFrame:RegisterEvent("SPELLS_CHANGED")
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("ADDON_LOADED")
 
+frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        if AddonName ~= ... then
+            return
+        else
+            local altering
+            hooksecurefunc(UIParent, "SetPoint", function(self)
+                if altering then
+                    return
+                end
 
-    sfixFrame:HookScript("OnEvent", function(self, event, ...)
-        if event == "ADDON_LOADED" then
-			UIParent:SetSize(1920, 1080)
+                altering = true
+                self:SetSize(1920, 1080)
+                self:ClearAllPoints()
+                self:SetPoint("CENTER")
+                altering = nil
+            end)
+
+            UIParent:SetSize(1920, 1080)
             UIParent:ClearAllPoints()
             UIParent:SetPoint("CENTER")
-        end
 
-    end)
+            self:UnregisterEvent("ADDON_LOADED")
+        end
+    end
+end)
