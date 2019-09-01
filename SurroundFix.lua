@@ -8,7 +8,7 @@ local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
 
 
     sfixFrame:HookScript("OnEvent", function(self, event, ...)
-        if event == "PLAYER_LOGIN" or "ADDON_LOADED" or "PLAYER_ENTERING_WORLD" or "PLAYER_ALIVE" or "SPELLS_CHANGED" then
+        if event == "ADDON_LOADED" then
 			UIParent:SetSize(1920, 1080)
             UIParent:ClearAllPoints()
             UIParent:SetPoint("CENTER")
