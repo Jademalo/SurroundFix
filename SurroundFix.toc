@@ -1,7 +1,7 @@
 ## Interface: 80200
 ## Title: Surround Fix
-## Version: 3.2
-## Notes: A fix for the Interface when running triple monitor resolutions.
+## Version: 3.3
+## Notes: A fix for various UI issues with multiple monitor setups 
 ## Author: Jademalo
 
 SurroundFix.lua
