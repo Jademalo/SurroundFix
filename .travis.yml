@@ -7,8 +7,8 @@ addons:
     - pandoc
 
 script:
-    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -d
-    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -d -g 1.13.2 -w 25252
+    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -d
+    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -s -- -d -g 1.13.2 -w 25252
 
 branches:
   only:
