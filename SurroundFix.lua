@@ -1,3 +1,14 @@
+--------------------------------------------
+--Check for Classic or Retail
+--------------------------------------------
+local isClassic = false
+
+if WOW_PROJECT_ID == 2 then
+    isClassic = true
+end
+
+
+
 --------------------------------------------------------------------------------
 --Variables
 --------------------------------------------------------------------------------
@@ -40,7 +51,11 @@ end
 
 
 local function sfixAnnounce() --Chatspam function
-    print("~Surround Fix~")
+    if isClassic then
+        print("~Surround Fix Classic~")
+    else
+        print("~Surround Fix~")
+    end
 
     if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
         print("Single display detected")
