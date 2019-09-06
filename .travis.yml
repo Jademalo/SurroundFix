@@ -1,0 +1,15 @@
+sudo: false
+language: c
+
+addons:
+  apt:
+    packages:
+    - pandoc
+
+script:
+    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -d
+    - curl -s https://raw.githubusercontent.com/BigWigsMods/packager/master/release.sh | bash -d -g 1.13.2 -w 25252
+
+branches:
+  only:
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
