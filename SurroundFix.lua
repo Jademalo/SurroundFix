@@ -130,3 +130,18 @@ if event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when t
 end
 
 end)
+
+
+
+--------------------------------------------------------------------------------
+--Slash Command Handler
+--------------------------------------------------------------------------------
+SLASH_SFIX, SLASH_SURROUNDFIX = "/sfix", "/surrounddix";
+local function handler(msg, editBox)
+    if msg == "auto" then
+        print("Setting aspect ratio to automatic detection")
+    else
+        print("Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
+    end
+end
+SlashCmdList["SurroundFix"] = handler;
