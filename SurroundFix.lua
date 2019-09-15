@@ -117,7 +117,28 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
 end
 
 local function slashHandler(msg, editBox)
-    if msg == "auto" then
+
+    local command, xAspect, yAspect = msg:match("^(%S*)%s*(%d*):*(%d*)") --Set command to the first bit of text before whitespace, set xaspect to the first number, and then yaspect to the number after a colon
+
+    if command == "aspect" then
+        if xAspect ~= "" and yAspect ~= "" then
+            sfixForceAspect = 1
+            sfixXAspect = tonumber(xAspect)
+            sfixYAspect = tonumber(yAspect)
+            print("Setting aspect ratio to "..sfixXAspect..":"..sfixYAspect)
+        else
+            print("SurroundFix - Usage: \'/sfix aspect x:y\'")
+        end
+    elseif command == "auto" then
+        --sfixForceAspect = 0
+        print("Setting aspect ratio to automatic detection")
+    else
+        print("SurroundFix - Usage: \'/sfix (aspect | auto)\' - Use aspect to force a specific aspect ratio, or auto for automatic detection")
+    end
+
+
+
+    --[[if msg == "auto" then
         print("SurroundFix - Setting aspect ratio to automatic detection")
         sfixForceAspect = 0
     elseif msg == "4:3" then
@@ -134,7 +155,7 @@ local function slashHandler(msg, editBox)
         sfixForceAspect = 4
     else
         print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
-    end
+    end]]--
     UIParent:SetPoint("CENTER")
 end
 
@@ -182,3 +203,27 @@ end)
 --Slash Command Handler
 --------------------------------------------------------------------------------
 SlashCmdList["SFIX"] = slashHandler;
+
+
+
+
+
+
+
+
+
+
+--[[
+local command, rest = msg:match("^(%S*)%s*(.-)$")
+
+force match the beginning of the string
+capture all occurences of nonspace characters
+ignore all occurences of space characters
+capture all characters
+force match until the end of the string
+
+local command, xAspect, yAspect = msg:match("^()%S*)%s*(%d*):*(%d*)")
+print(command)
+print(xAspect)
+print(yAspect)
+]]--
