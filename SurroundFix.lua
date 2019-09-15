@@ -22,8 +22,8 @@ local aspect = "unknown"
 local hookSet
 local parentDefault = true
 
-if not forceAspect then
-    forceAspect = 0
+if not sfixForceAspect then
+    sfixForceAspect = 0 --Set this to nil if it doesn't already exist
 end
 
 
@@ -144,6 +144,19 @@ SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix";
 local function handler(msg, editBox)
     if msg == "auto" then
         print("SurroundFix - Setting aspect ratio to automatic detection")
+        sfixForceAspect = 0
+    elseif msg == "4:3" then
+        print("SurroundFix - Setting aspect ratio to 4:3")
+        sfixForceAspect = 1
+    elseif msg == "16:9" then
+        print("SurroundFix - Setting aspect ratio to 16:9")
+        sfixForceAspect = 2
+    elseif msg == "16:10" then
+        print("SurroundFix - Setting aspect ratio to 16:10")
+        sfixForceAspect = 3
+    elseif msg == "21:9" then
+        print("SurroundFix - Setting aspect ratio to 21:9")
+        sfixForceAspect = 4
     else
         print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
     end
