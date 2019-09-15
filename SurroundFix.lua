@@ -29,6 +29,7 @@ end
 SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix"; --Setting the slash commands available
 
 
+
 --------------------------------------------------------------------------------
 --Functions
 --------------------------------------------------------------------------------
@@ -55,18 +56,9 @@ local function uiResolution()
             end
         end
 
-    elseif sfixForceAspect == 1 then --Check if it is forcing 4:3
-        xRes = (yResDiv * 12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
-        aspect = "4:3"
-    elseif sfixForceAspect == 2 then --Check if it is forcing 16:10
-        xRes = ((yRes / 10) * 16) --Calculate the Horizontal resolution of the middle display for 16:10 Aspect Ratio
-        aspect = "16:10"
-    elseif sfixForceAspect == 3 then --Check if it is forcing 16:9
-        xRes = (yResDiv * 16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
-        aspect = "16:9"
-    elseif sfixForceAspect == 4 then --Check if it is forcing 21:9
-        xRes = (yResDiv * 21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
-        aspect = "21:9"
+    elseif sfixForceAspect == 1 then --Check if it is forcing a specific aspect ratio
+        xRes = ((yRes / sfixYAspect) * sfixXAspect) --Calculate the Horizontal resolution of the middle display relative to the aspect provided manually
+        aspect = sfixXAspect..":"..sfixYAspect
     end
 
 
@@ -80,17 +72,23 @@ local function sfixAnnounce() --Chatspam function
         print("~SurroundFix~")
     end
 
-    if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
-        print("Single display detected")
+    if sfixForceAspect == 0 then
+        if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
+            print("Automatic mode - Single display detected")
+        else
+            print("Automatic mode - Middle display detected as", aspect)
+        end
     else
-        print("Middle display detected as", aspect)
+        print("Manual mode - UI set to", aspect)
     end
 
-    if parentDefault then --If he haven't touched the default UIParent behaviour, use a different message.
+--[[
+    if parentDefault then --If we haven't touched the default UIParent behaviour, use a different message.
         print("Leaving UIParent as default")
     else
-        print("Setting UI Resolution to", floor(xRes + 0.5), "x", floor(yRes + 0.5))
+        print("Setting UI Resolution to "..floor(xRes + 0.5).."x"..floor(yRes + 0.5))
     end
+--]]
 end
 
 
@@ -101,7 +99,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     end
 
     hookSet = true --Sets hookSet to true so it doesn't trigger from itsself
-        uiResolution()
+    uiResolution()
 
     if GetScreenWidth() <= (yResDiv * 21) and parentDefault and sfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = nil
@@ -116,30 +114,37 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
 
 end
 
+
 local function slashHandler(msg, editBox)
     local command, xAspect, yAspect, rest = msg:match("^(%S*)%s*(%d*):?(%d*)(.-)$") --Set command to the first bit of text before whitespace, set xaspect to the first number, set yaspect to the number after a colon, and set remaining to rest
 
     if command == "aspect" then --If the command is aspect
 
         if xAspect ~= "" and yAspect ~= "" and rest == "" then --If there's a number in xAspect and yAspect, and there's nothing else
+
             sfixForceAspect = 1
             sfixXAspect = tonumber(xAspect) --Set global
             sfixYAspect = tonumber(yAspect) --Set global
-            print("Surround Fix - Setting aspect ratio to "..sfixXAspect..":"..sfixYAspect)
+            UIParent:SetPoint("CENTER")
+            sfixAnnounce()
+
         elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
+
             if rest == "auto" then --If the command is /sfix aspect [auto]
                 sfixForceAspect = 0
-                print("Setting aspect ratio to automatic detection")
+                UIParent:SetPoint("CENTER")
+                sfixAnnounce()
             else --If the command is /sfix aspect [something else]
                 print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
             end
+
         else --If the command is /sfix aspect [something other than an aspect ratio or auto]
             print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
         end
-        UIParent:SetPoint("CENTER")
 
     elseif command == "refresh" then --If the command is refresh
         UIParent:SetPoint("CENTER")
+        sfixAnnounce()
     else --If the command is /sfix [anything not defined]
         print("SurroundFix - Usage: \'/sfix [aspect | refresh]\' - Use aspect to change how the aspect ratio is calculated, or refresh to force a refresh")
     end
@@ -190,27 +195,3 @@ end)
 --Slash Command Handler
 --------------------------------------------------------------------------------
 SlashCmdList["SFIX"] = slashHandler;
-
-
-
-
-
-
-
-
-
-
---[[
-local command, rest = msg:match("^(%S*)%s*(.-)$")
-
-force match the beginning of the string
-capture all occurences of nonspace characters
-ignore all occurences of space characters
-capture all characters
-force match until the end of the string
-
-local command, xAspect, yAspect = msg:match("^()%S*)%s*(%d*):*(%d*)")
-print(command)
-print(xAspect)
-print(yAspect)
-]]--
