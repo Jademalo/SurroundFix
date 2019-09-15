@@ -54,6 +54,29 @@ local function uiResolution()
 end
 
 
+local function uiResolutionForce()
+    yRes = GetScreenHeight() --Get the Vertical resolution of the setup
+    xRes = GetScreenWidth() --Get the Horizontal resolution of the setup
+    yResDiv = yRes / 9
+
+    if sfixForceAspect == 1 then --Check if it is forcing 4:3
+        xRes = (yResDiv * 12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
+        aspect = "4:3"
+    elseif sfixForceAspect == 2 then --Check if it is forcing 16:10
+        xRes = ((yRes / 10) * 16) --Calculate the Horizontal resolution of the middle display for 16:10 Aspect Ratio
+        aspect = "16:10"
+    elseif sfixForceAspect == 3 then --Check if it is forcing 16:9
+        xRes = (yResDiv * 16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
+        aspect = "16:9"
+    elseif sfixForceAspect == 4 then --Check if it is forcing 21:9
+        xRes = (yResDiv * 21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
+        aspect = "21:9"
+    else
+        uiResolution()
+    end
+end
+
+
 local function sfixAnnounce() --Chatspam function
     if isClassic then
         print("~SurroundFix Classic~")
@@ -82,9 +105,13 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     end
 
     hookSet = true --Sets hookSet to true so it doesn't trigger from itsself
-    uiResolution()
+    if sfixForceAspect > 0 then
+        uiResolutionForce()
+    else
+        uiResolution()
+    end
 
-    if GetScreenWidth() <= (yResDiv * 21) and parentDefault then --If it's smaller than or equal to a 21:9 monitor (so single monitor), do nothing until it's been changed.
+    if GetScreenWidth() <= (yResDiv * 21) and parentDefault and sfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = nil
         return
     end
@@ -148,11 +175,11 @@ local function handler(msg, editBox)
     elseif msg == "4:3" then
         print("SurroundFix - Setting aspect ratio to 4:3")
         sfixForceAspect = 1
-    elseif msg == "16:9" then
-        print("SurroundFix - Setting aspect ratio to 16:9")
-        sfixForceAspect = 2
     elseif msg == "16:10" then
         print("SurroundFix - Setting aspect ratio to 16:10")
+        sfixForceAspect = 2
+    elseif msg == "16:9" then
+        print("SurroundFix - Setting aspect ratio to 16:9")
         sfixForceAspect = 3
     elseif msg == "21:9" then
         print("SurroundFix - Setting aspect ratio to 21:9")
@@ -160,5 +187,6 @@ local function handler(msg, editBox)
     else
         print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
     end
+    UIParent:SetPoint("CENTER")
 end
 SlashCmdList["SFIX"] = handler;
