@@ -22,6 +22,10 @@ local aspect = "unknown"
 local hookSet
 local parentDefault = true
 
+if not forceAspect then
+    forceAspect = 0
+end
+
 
 
 --------------------------------------------------------------------------------
@@ -52,9 +56,9 @@ end
 
 local function sfixAnnounce() --Chatspam function
     if isClassic then
-        print("~Surround Fix Classic~")
+        print("~SurroundFix Classic~")
     else
-        print("~Surround Fix~")
+        print("~SurroundFix~")
     end
 
     if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
@@ -136,12 +140,12 @@ end)
 --------------------------------------------------------------------------------
 --Slash Command Handler
 --------------------------------------------------------------------------------
-SLASH_SFIX, SLASH_SURROUNDFIX = "/sfix", "/surrounddix";
+SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix";
 local function handler(msg, editBox)
     if msg == "auto" then
-        print("Setting aspect ratio to automatic detection")
+        print("SurroundFix - Setting aspect ratio to automatic detection")
     else
-        print("Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
+        print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
     end
 end
-SlashCmdList["SurroundFix"] = handler;
+SlashCmdList["SFIX"] = handler;
