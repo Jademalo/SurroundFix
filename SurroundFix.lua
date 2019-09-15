@@ -26,6 +26,7 @@ if not sfixForceAspect then
     sfixForceAspect = 0 --Set this to nil if it doesn't already exist
 end
 
+SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix"; --Setting the slash commands available
 
 
 --------------------------------------------------------------------------------
@@ -36,30 +37,25 @@ local function uiResolution()
     xRes = GetScreenWidth() --Get the Horizontal resolution of the setup
     yResDiv = yRes / 9
 
-    if xRes > (yResDiv * 21) then --If it's bigger than a 21:9 monitor (so multiple monitors)
-        if xRes >= (yResDiv * 53) then --Figure out if at least one display is Ultrawide
-            xRes = (yResDiv * 21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
-            aspect = "21:9"
-        elseif xRes == (yResDiv * 36) then --Figure out if all 3 displays are 4:3
-            xRes = (yResDiv * 12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
-            aspect = "4:3"
-        elseif xRes == ((yRes / 10) * 48) then --Figure out if all 3 displays are 16:10
-            xRes = ((yRes / 10) * 16) --Calculate the Horizontal resolution of the middle display for 16:10 Aspect Ratio
-            aspect = "16:10"
-        else
-            xRes = (yResDiv * 16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
-            aspect = "16:9"
+    if sfixForceAspect == 0 then --Check if the aspect mode is set to automatic
+
+        if xRes > (yResDiv * 21) then --If it's bigger than a 21:9 monitor (so multiple monitors)
+            if xRes >= (yResDiv * 53) then --Figure out if at least one display is Ultrawide
+                xRes = (yResDiv * 21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
+                aspect = "21:9"
+            elseif xRes == (yResDiv * 36) then --Figure out if all 3 displays are 4:3
+                xRes = (yResDiv * 12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
+                aspect = "4:3"
+            elseif xRes == ((yRes / 10) * 48) then --Figure out if all 3 displays are 16:10
+                xRes = ((yRes / 10) * 16) --Calculate the Horizontal resolution of the middle display for 16:10 Aspect Ratio
+                aspect = "16:10"
+            else
+                xRes = (yResDiv * 16) --Calculate the Horizontal resolution of the middle display for 16:9 Aspect Ratio
+                aspect = "16:9"
+            end
         end
-    end
-end
 
-
-local function uiResolutionForce()
-    yRes = GetScreenHeight() --Get the Vertical resolution of the setup
-    xRes = GetScreenWidth() --Get the Horizontal resolution of the setup
-    yResDiv = yRes / 9
-
-    if sfixForceAspect == 1 then --Check if it is forcing 4:3
+    elseif sfixForceAspect == 1 then --Check if it is forcing 4:3
         xRes = (yResDiv * 12) --Calculate the Horizontal resolution of the middle display for 4:3 Aspect Ratio
         aspect = "4:3"
     elseif sfixForceAspect == 2 then --Check if it is forcing 16:10
@@ -71,9 +67,9 @@ local function uiResolutionForce()
     elseif sfixForceAspect == 4 then --Check if it is forcing 21:9
         xRes = (yResDiv * 21) --Calculate the Horizontal resolution of the middle display for 21:9 Aspect Ratio
         aspect = "21:9"
-    else
-        uiResolution()
     end
+
+
 end
 
 
@@ -105,11 +101,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     end
 
     hookSet = true --Sets hookSet to true so it doesn't trigger from itsself
-    if sfixForceAspect > 0 then
-        uiResolutionForce()
-    else
         uiResolution()
-    end
 
     if GetScreenWidth() <= (yResDiv * 21) and parentDefault and sfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = nil
@@ -122,6 +114,28 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     self:SetPoint("CENTER")
     hookSet = nil
 
+end
+
+local function slashHandler(msg, editBox)
+    if msg == "auto" then
+        print("SurroundFix - Setting aspect ratio to automatic detection")
+        sfixForceAspect = 0
+    elseif msg == "4:3" then
+        print("SurroundFix - Setting aspect ratio to 4:3")
+        sfixForceAspect = 1
+    elseif msg == "16:10" then
+        print("SurroundFix - Setting aspect ratio to 16:10")
+        sfixForceAspect = 2
+    elseif msg == "16:9" then
+        print("SurroundFix - Setting aspect ratio to 16:9")
+        sfixForceAspect = 3
+    elseif msg == "21:9" then
+        print("SurroundFix - Setting aspect ratio to 21:9")
+        sfixForceAspect = 4
+    else
+        print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
+    end
+    UIParent:SetPoint("CENTER")
 end
 
 
@@ -167,26 +181,4 @@ end)
 --------------------------------------------------------------------------------
 --Slash Command Handler
 --------------------------------------------------------------------------------
-SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix";
-local function handler(msg, editBox)
-    if msg == "auto" then
-        print("SurroundFix - Setting aspect ratio to automatic detection")
-        sfixForceAspect = 0
-    elseif msg == "4:3" then
-        print("SurroundFix - Setting aspect ratio to 4:3")
-        sfixForceAspect = 1
-    elseif msg == "16:10" then
-        print("SurroundFix - Setting aspect ratio to 16:10")
-        sfixForceAspect = 2
-    elseif msg == "16:9" then
-        print("SurroundFix - Setting aspect ratio to 16:9")
-        sfixForceAspect = 3
-    elseif msg == "21:9" then
-        print("SurroundFix - Setting aspect ratio to 21:9")
-        sfixForceAspect = 4
-    else
-        print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
-    end
-    UIParent:SetPoint("CENTER")
-end
-SlashCmdList["SFIX"] = handler;
+SlashCmdList["SFIX"] = slashHandler;
