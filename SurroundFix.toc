@@ -16,7 +16,7 @@
 ## X-WoWI-ID: 25251
 
 
-## SavedVariables: sfixForceAspect
+## SavedVariables: sfixForceAspect, sfixXAspect, sfixYAspect
 
 ## Core ##
 SurroundFix.lua

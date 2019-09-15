@@ -117,46 +117,33 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
 end
 
 local function slashHandler(msg, editBox)
+    local command, xAspect, yAspect, rest = msg:match("^(%S*)%s*(%d*):?(%d*)(.-)$") --Set command to the first bit of text before whitespace, set xaspect to the first number, set yaspect to the number after a colon, and set remaining to rest
 
-    local command, xAspect, yAspect = msg:match("^(%S*)%s*(%d*):*(%d*)") --Set command to the first bit of text before whitespace, set xaspect to the first number, and then yaspect to the number after a colon
+    if command == "aspect" then --If the command is aspect
 
-    if command == "aspect" then
-        if xAspect ~= "" and yAspect ~= "" then
+        if xAspect ~= "" and yAspect ~= "" and rest == "" then --If there's a number in xAspect and yAspect, and there's nothing else
             sfixForceAspect = 1
-            sfixXAspect = tonumber(xAspect)
-            sfixYAspect = tonumber(yAspect)
-            print("Setting aspect ratio to "..sfixXAspect..":"..sfixYAspect)
-        else
-            print("SurroundFix - Usage: \'/sfix aspect x:y\'")
+            sfixXAspect = tonumber(xAspect) --Set global
+            sfixYAspect = tonumber(yAspect) --Set global
+            print("Surround Fix - Setting aspect ratio to "..sfixXAspect..":"..sfixYAspect)
+        elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
+            if rest == "auto" then --If the command is /sfix aspect [auto]
+                sfixForceAspect = 0
+                print("Setting aspect ratio to automatic detection")
+            else --If the command is /sfix aspect [something else]
+                print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
+            end
+        else --If the command is /sfix aspect [something other than an aspect ratio or auto]
+            print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
         end
-    elseif command == "auto" then
-        --sfixForceAspect = 0
-        print("Setting aspect ratio to automatic detection")
-    else
-        print("SurroundFix - Usage: \'/sfix (aspect | auto)\' - Use aspect to force a specific aspect ratio, or auto for automatic detection")
+        UIParent:SetPoint("CENTER")
+
+    elseif command == "refresh" then --If the command is refresh
+        UIParent:SetPoint("CENTER")
+    else --If the command is /sfix [anything not defined]
+        print("SurroundFix - Usage: \'/sfix [aspect | refresh]\' - Use aspect to change how the aspect ratio is calculated, or refresh to force a refresh")
     end
 
-
-
-    --[[if msg == "auto" then
-        print("SurroundFix - Setting aspect ratio to automatic detection")
-        sfixForceAspect = 0
-    elseif msg == "4:3" then
-        print("SurroundFix - Setting aspect ratio to 4:3")
-        sfixForceAspect = 1
-    elseif msg == "16:10" then
-        print("SurroundFix - Setting aspect ratio to 16:10")
-        sfixForceAspect = 2
-    elseif msg == "16:9" then
-        print("SurroundFix - Setting aspect ratio to 16:9")
-        sfixForceAspect = 3
-    elseif msg == "21:9" then
-        print("SurroundFix - Setting aspect ratio to 21:9")
-        sfixForceAspect = 4
-    else
-        print("SurroundFix - Use /sfix [aspect] to force the UI to a specified aspect ratio, or \'auto\' for automatic detection")
-    end]]--
-    UIParent:SetPoint("CENTER")
 end
 
 
