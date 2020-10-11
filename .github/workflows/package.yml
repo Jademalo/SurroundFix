@@ -48,4 +48,4 @@ jobs:
       - name: Package and Release for Classic
         uses: BigWigsMods/packager@master
         with:
-          args: -g 1.13.5 -w 25252
+          args: -g classic -w 25252

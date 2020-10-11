@@ -10,7 +10,7 @@
 
 ## Version: @project-version@
 
-## Author: Jademalo
+## Author: @project-author@
 
 ## X-Curse-Project-ID: 300214
 ## X-WoWI-ID: 25251
