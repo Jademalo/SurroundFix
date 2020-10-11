@@ -1,0 +1,206 @@
+JademaloYesterday at 21:23
+Does anyone have any idea what's going on with my UIParent script?
+I've got a really simple thing that sets UIParent to 1920x1080, clears all points, then sets the point to center. This means on my triple wide setup the UI gets centred on the middle screen.
+Ever since BFA though, after some loading screens it goes to the left hand screen. After debugging it a bit it looks like after the "ADDON_LOADED" event, the base UI is setting UIParent back to TOPLEFT. I've tried a few different events to run it on, but none of them seem to work.
+It only happens with loading screens, and interestingly it's always absolutely fine on login. Any ideas?
+
+local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
+
+sfixFrame:RegisterEvent("PLAYER_LOGIN")
+sfixFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+sfixFrame:RegisterEvent("ADDON_LOADED")
+sfixFrame:RegisterEvent("PLAYER_ALIVE")
+sfixFrame:RegisterEvent("SPELLS_CHANGED")
+
+
+sfixFrame:HookScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+    UIParent:SetSize(1920, 1080)
+        UIParent:ClearAllPoints()
+        UIParent:SetPoint("CENTER")
+    end 
+
+end)
+ResikeYesterday at 21:48
+I think you need something like this: 
+local AddonName = ...
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("ADDON_LOADED")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+
+frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        if AddonName ~= ... then
+            return
+        else
+            local altering
+            hooksecurefunc(UIParent, "SetPoint", function(self)
+                if altering then
+                    return
+                end
+
+                altering = true
+                self:SetSize(1920, 1080)
+                self:ClearAllPoints()
+                self:SetPoint("CENTER")
+                altering = nil
+            end)
+            
+            self:UnregisterEvent("ADDON_LOADED")
+        end
+    end
+
+    if InCombatLockdown() then
+        return
+    end
+
+    UIParent:SetSize(1920, 1080)
+    UIParent:ClearAllPoints()
+    UIParent:SetPoint("CENTER")
+end)
+(edited)
+JademaloYesterday at 21:54
+Awesome, that seems to be working perfectly! Thank you!
+Why exactly did my original approach not work?
+I mean, it has for multiple xpacs, and even this macro works to set it (though it doesn't persist)
+"/run UIParent:SetSize(1920, 1080); UIParent:ClearAllPoints();  UIParent:SetPoint("CENTER")"(edited)
+ResikeYesterday at 21:57
+You've only run your script once on ADDON_LOAD, which was probably enough untill BFA, but seems like the default UI reanchoring the UIParent after that point.
+JademaloYesterday at 21:59
+does your script not just run it on addon_load as well? Doesn't look like PLAYER_ENTERING_WORLD does anything in there. I actually linked the wrong version too, the if event had all of the registered events in it originally
+(and it still didn't work)
+;riversYesterday at 22:00
+The relevant line is the one with hooksecurefunc
+Which hooks onto UIParent:SetPoint
+JademaloYesterday at 22:01
+what does that do exactly? Prevent the base UI from interfering with it?
+;riversYesterday at 22:01
+Not precisely
+Rather, whenever any code calls SetPoint on UIParent after the hook is set, the hook will execute immediately afterwords
+Which in this case will simply reapply your positioning
+ResikeYesterday at 22:08
+My script creates the hook on ADDON_LOAD, and nugdes the hook to get reapplied on every loading screen, it'll also get reapplied if any other addon or blizzard tries to SetPoint it
+JademaloYesterday at 22:08
+aaaaah, I see!
+what's the point of altering, addonname, and the incombatlockdown bit?
+I'm fairly inexperienced but I'd like to understand it if possible
+;riversYesterday at 22:09
+Altering prevents an infinite recursion
+Since the hook calls SetPoint, so it triggers itself
+Sorry, infinite loop, it’s not really recursion
+ADDON_LOADED fires for every addon, so the addon name check makes sure that you only do the work once
+And finally, the combat lockdown is due to (presumably) UIParent being a frame that you can’t edit in combat
+ResikeYesterday at 22:12
+Actually since BFA ADDON_LOADED seems to trigger for the addon that registers the frame first
+But old habits(edited)
+And who knows how's it gonna work in 2 weeeks from now(edited)
+JademaloYesterday at 22:15
+lol
+awesome, thanks guys
+really appreciate the explanation
+Right, couple more questions if you don't mind answering them;
+- Why are the setsize/setpoint etc things at the bottom after the hooksecurefunc?
+- Why are they referencing self rather than UIParent? I don't see how the ones at the bottom can know they're doing their thing to UIParent.
+- What exactly do the three dots represent in the addonname variable? Is it a specific thing that calls the actual name of the addon?
+Am I also right in reading it such that since there's no if statement before most of the main function, it fires on every event that is registered to the frame, so both addon_loaded and player_entering_world? (and then it does the thing to ignore addon loaded if it's not this addon)
+m4xc4v413r4Yesterday at 22:58
+Not sure if the setsize setpoint at the very end is needed, but he knows more than me so, maybe it is needed
+The self is UIParent, the ones on the bottom are for the frame
+The 3 dots basically represent all the returns from whatever you're using it on. In that case, when you use it like that it gives you addon info from your addon that the game provides when each addon is loaded, as far as I know it's the addon name and a table for you to use, for example to hold data you want to share with multiple files of the same addon(edited)
+JademaloYesterday at 23:06
+Aaaah, alright. That makes a bit more sense.
+Why is self UIParent? Would self not be frame since that's the frame that's running that script?
+;riversYesterday at 23:09
+In the hook?
+JademaloYesterday at 23:10
+the one at the bottom is outside of the hook though
+ResikeYesterday at 23:41
+Those self's should be UIParent there, it's not really neccessary, but it's to make sure to trigger a SetPoint call on the UIParent which will tirgger it's securehook(edited)
+For example the first time the addon loads it might miss a SetPoint call that was called before the addon is loaded, this makes sure to actually trigger it when loading/or on loading screens
+JademaloYesterday at 23:43
+Right, I thought it didn't look right! Thanks!
+definitely all seems to be working perfectly now
+ResikeYesterday at 23:46
+Maybe the PLAYER_ENTERING_WORLD event is not even needed there and this could be enough: 
+local AddonName = ...
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("ADDON_LOADED")
+
+frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        if AddonName ~= ... then
+            return
+        else
+            local altering
+            hooksecurefunc(UIParent, "SetPoint", function(self)
+                if altering then
+                    return
+                end
+
+                altering = true
+                self:SetSize(1920, 1080)
+                self:ClearAllPoints()
+                self:SetPoint("CENTER")
+                altering = nil
+            end)
+
+            UIParent:SetSize(1920, 1080)
+            UIParent:ClearAllPoints()
+            UIParent:SetPoint("CENTER")
+
+            self:UnregisterEvent("ADDON_LOADED")
+        end
+    end
+end)
+(edited)
+But since you said the issue most happen on loading screens i added that extra check to setpoint everything on every loading screen
+JademaloYesterday at 23:49
+I expect if the hook is there then it should be fine, with the old script the size is correct it's just anchored in the wrong place
+Thanks again, really appreciate the help
+ResikeYesterday at 23:51
+Usually it's worth to check things after the PLAYER_ENTERING_WORLD event since Blizzard mostly run their default stuff between the ADDON_LOADED and that event
+JademaloYesterday at 23:53
+does the hook not run independently of the event after it's been set initially though?
+ResikeYesterday at 23:53
+yes it runs forever, and you can't cancel it
+so that's why you only want to set it once only
+JademaloYesterday at 23:55
+right
+last question, promise - since you're unregistering the event at the end there, I assume that means it won't fire more than the once. However, does ADDON_LOADED not just run the once on load anyway?(edited)
+ResikeYesterday at 23:59
+ADDON_LOAD runs every time an addon loads so it triggers once for all of your addons, then it triggers once for all of Blizzard's addons
+11 August 2018
+JademaloToday at 00:00
+aaahhhh, I see
+I was under the impression it only triggered when itsself was loaded
+im surprised that's not an event actually
+ResikeToday at 00:00
+It's seems like since 8.0.1 the first addon triggering it is always your addon, but pre BFA it used to iterate over every addon alphabetically
+JademaloToday at 00:01
+oh ok
+ResikeToday at 00:01
+But even once your addon loaded then you usually don't care about the other addon loads, so the best way is to unregister once your is loaded(edited)
+;riversToday at 00:01
+Imo just checking that the addonname is yours seems the sane thing to do
+JademaloToday at 00:02
+and that's done with the ...?
+;riversToday at 00:03
+Every file has your addon’s name and a private namespace (actually just a table) passed in a vararg (the ... you’re asking about)
+ResikeToday at 00:06
+Inside the event handler the ... represents every argument that belongs to that event, ... there it would be the addon's name which triggered the ADDON_LOADED event
+;riversToday at 00:07
+I’d link the lua online manual, but this is one of the like 3 topics for which it’s outdated
+JademaloToday at 00:32
+haha, typical
+thanks again guys, I really really do appreciate the help. Sometimes it's hard to know where to start, you know?
+m4xc4v413r4Today at 01:12
+Yeah docs are pretty meh, so we just have to help each other figure out stuff from looking at blizz code and from experience
+uncle keyboard the oldToday at 01:25
+sometimes my auto-sort addons go apeshit
+https://i.imgur.com/Tk68THi.gifv
+JademaloToday at 02:43
+Is there an event for a resolution change? Trying to do some fancy auto resolution detection stuff
+oh found it, DISPLAY_SIZE_CHANGED
+this might actually just be a better event to use entirely

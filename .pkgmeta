@@ -2,3 +2,4 @@ package-as: SurroundFix
 
 ignore:
   - README.md
+  - Other Files/
