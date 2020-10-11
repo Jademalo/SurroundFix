@@ -5,11 +5,13 @@ name: Package with Artifacts
 # this will target only tags, and not all pushes to the master branch.
 # this part can be heavily customized to your liking, like targeting only tags that match a certain word,
 # other branches or even pullrequests.
-# this tag schema only fires on version numbers, though isn't as good as regex "/^v\d+\.\d+(\.\d+)?(-\S*)?$/"
+
+# this will only fire if the action is present on both the master branch and the child branch
+# https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#example-using-multiple-events-with-activity-types-or-configuration
 on:
   push:
-    branches:
-      - !master
+    ignore-branches:
+      - master
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
