@@ -1,5 +1,5 @@
 # description of this workflow, can be anything you want
-name: Package with Artifacts
+name: Package and Release
 
 # we need to let GitHub know _when_ we want to release, typically only when we create a new tag.
 # this will target only tags, and not all pushes to the master branch.
@@ -8,8 +8,8 @@ name: Package with Artifacts
 # this tag schema only fires on version numbers, though isn't as good as regex "/^v\d+\.\d+(\.\d+)?(-\S*)?$/"
 on:
   push:
-    branches:
-      - dev
+    tags:
+      - v[0-9]+.[0-9]+*
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
@@ -20,6 +20,14 @@ jobs:
     # we can run our steps on pretty much anything, but the "ubuntu-latest" image is a safe bet
     runs-on: ubuntu-latest
 
+    # specify the environment variables used by the packager, matching the secrets from the project on GitHub
+    env:
+      CF_API_KEY: ${{ secrets.CF_API_KEY }}
+      WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
+      GITHUB_OAUTH: ${{ secrets.GITHUB_TOKEN }}  # "GITHUB_TOKEN" is a secret always provided to the workflow
+                                                 # for your own token, the name cannot start with "GITHUB_"
+
+    # "steps" holds a list of all the steps needed to package and release our AddOn
     steps:
 
       # we first have to clone the AddOn project, this is a required step
@@ -33,15 +41,6 @@ jobs:
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package and Release
         uses: BigWigsMods/packager@master
-        with:
-          args: -d
-        uses: actions/upload-artifact@v2
-        with:
-          name: retail
-          path: |
-            .release/*.zip
-            !.release/*-classic.zip
-
 
       # another example where we supply additional arguments, this example is specifically to release
       # for the Classic version of the game
@@ -49,9 +48,4 @@ jobs:
       - name: Package and Release for Classic
         uses: BigWigsMods/packager@master
         with:
-          args: -d -g classic -w 25252
-        uses: actions/upload-artifact@v2
-        with:
-          name: retail
-          path: |
-            .release/*-classic.zip
+          args: -g classic -w 25252
