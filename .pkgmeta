@@ -1,5 +1,4 @@
 package-as: SurroundFix
 
 ignore:
-  - .travis.yml
   - README.md
