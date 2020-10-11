@@ -9,7 +9,7 @@ name: Package with Artifacts
 on:
   push:
     branches:
-      - dev
+      - !master
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
