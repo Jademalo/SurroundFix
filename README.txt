@@ -28,6 +28,7 @@ For the curious, the mod essentially resizes the UIParent frame to the resolutio
 of your middle monitor. This means that every UI element and AddOn sees a normal
 sized display rather than a crazy wide one, so they perfectly orient themselves
 on the middle display.
+
 This is a much better solution than manually positioning every UI element, and
 also means that if you switch back to a single display your UI won't break! In
 fact, it can handle switching between Triplewide and single on the fly!

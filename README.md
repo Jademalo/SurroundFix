@@ -19,8 +19,8 @@ Configure various options with /sfix or /surroundfix. You can change the aspect 
 **Note** - Certain AddOns will not be positioned correctly, and moving them will be strange. Unfortunately there isn't much I can do about this, since it's an issue with how the AddOn causing issues handles it's frames. Any AddOn that is designed to properly use UIParent should have no issues.
 
 
-![Before](https://i.imgur.com/Peh2Mb1.jpg)
-![After](https://i.imgur.com/S8OwA6U.jpg)
+![Before](Other%20Files/Images/SFix%20Default.jpg)
+![After](Other%20Files/Images/SFix%20Fixed.jpg)
 
 
 For the curious, the mod essentially resizes the UIParent frame to the resolution of your middle monitor. This means that every UI element and AddOn sees a normal sized display rather than a crazy wide one, so they perfectly orient themselves on the middle display.
