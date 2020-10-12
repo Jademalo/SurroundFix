@@ -7,7 +7,7 @@ if WOW_PROJECT_ID == 2 then
     isClassic = true
 end
 
---test
+
 
 --------------------------------------------------------------------------------
 --Variables
@@ -169,7 +169,7 @@ sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially 
 
     if event == "ADDON_LOADED" and addonName == ... then
     sfixFrame:UnregisterEvent("ADDON_LOADED")
-    hooksecurefunc(UIParent, "SetPoint", UIParentHook)--Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
+    hooksecurefunc(UIParent, "SetPoint", UIParentHook) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
 end
 
 if event == "PLAYER_ENTERING_WORLD" then
