@@ -8,11 +8,14 @@ name: Package with Artifacts
 
 # this will only fire if the action is present on both the master branch and the child branch (I think?)
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#example-using-multiple-events-with-activity-types-or-configuration
-# This doesn't appear on the action list since it only shows actions on the master branch, and this action ignores the master branch
+# Workflows don't show up in the action list until they have been run once
+
 on:
   push:
-    ignore-branches:
+    branches-ignore:
       - master
+    tags-ignore:
+      - v[0-9]+.[0-9]+*
 
 # a workflow is built up as jobs, and within these jobs are steps
 jobs:
