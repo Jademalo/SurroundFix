@@ -6,8 +6,9 @@ name: Package with Artifacts
 # this part can be heavily customized to your liking, like targeting only tags that match a certain word,
 # other branches or even pullrequests.
 
-# this will only fire if the action is present on both the master branch and the child branch
+# this will only fire if the action is present on both the master branch and the child branch (I think?)
 # https://docs.github.com/en/free-pro-team@latest/actions/reference/events-that-trigger-workflows#example-using-multiple-events-with-activity-types-or-configuration
+# This doesn't appear on the action list since it only shows actions on the master branch, and this action ignores the master branch
 on:
   push:
     ignore-branches:
@@ -37,13 +38,6 @@ jobs:
         uses: BigWigsMods/packager@master
         with:
           args: -d
-        uses: actions/upload-artifact@v2
-        with:
-          name: retail
-          path: |
-            .release/*.zip
-            !.release/*-classic.zip
-
 
       # another example where we supply additional arguments, this example is specifically to release
       # for the Classic version of the game
@@ -52,8 +46,9 @@ jobs:
         uses: BigWigsMods/packager@master
         with:
           args: -d -g classic -w 25252
+
+      - name: Upload Build Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: retail
-          path: |
-            .release/*-classic.zip
+          name: builds
+          path: .release/*.zip
