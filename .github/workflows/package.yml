@@ -48,16 +48,14 @@ jobs:
       # add a variable for the name of the folder being added as an artifact
       - name: Set Folder Name
         run: |
-          ls -l
           cd .release
-          echo "folder_name=$(ls -d */)" >> $GITHUB_ENV
-          cd ..
+          echo "folder_name=$(ls -d */ | sed 's:/*$::')" >> $GITHUB_ENV
 
       # upload the artifact for retail
       - name: Upload Retail Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: b${{ env.folder_name }}-${{ github.sha }}
+          name: ${{ env.folder_name }}-${{ github.sha }}
           path: .release/*/
 
 
@@ -73,5 +71,5 @@ jobs:
       - name: Upload Classic Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: b${{ env.folder_name }}-${{ github.sha }}-classic
+          name: ${{ env.folder_name }}-${{ github.sha }}-classic
           path: .release/*/
