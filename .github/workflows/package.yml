@@ -39,15 +39,17 @@ jobs:
           # which is useful for controlling the length of the automated changelog
           fetch-depth: 50
 
+
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package
         uses: BigWigsMods/packager@master
         with:
           args: -d
 
-      # add a variable for the name of the folder being added as an artifact
-      - name: Set Folder Name
+      # add variables for the name of the folder being added as an artifact
+      - name: Set Name Variables
         run: |
+          echo "version=$(git describe)" >> $GITHUB_ENV
           cd .release
           echo "folder_name=$(ls -d */ | sed 's:/*$::')" >> $GITHUB_ENV
 
@@ -56,7 +58,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.folder_name }}-${{ github.sha }}
-          path: .release/*/
+          path: |
+            .release/*/
+            !.release/*.zip
 
 
       # another example where we supply additional arguments, this example is specifically to release
@@ -71,5 +75,7 @@ jobs:
       - name: Upload Classic Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: ${{ env.folder_name }}-${{ github.sha }}-classic
-          path: .release/*/
+          name: ${{ env.folder_name }}-${{ env.version }}-classic
+          path: |
+            .release/*/
+            !.release/*.zip
