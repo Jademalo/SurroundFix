@@ -39,11 +39,23 @@ jobs:
           # which is useful for controlling the length of the automated changelog
           fetch-depth: 50
 
+      - name: Set Folder Name
+        run: |
+          cd .release
+          echo "folder_name=$(ls -d */)" >> $GITHUB_ENV
+          cd ..
+
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package
         uses: BigWigsMods/packager@master
         with:
           args: -d
+
+      - name: Upload Retail Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: b${{ env.folder_name }}-${{ github.sha }}
+          path: .release/*/
 
       # another example where we supply additional arguments, this example is specifically to release
       # for the Classic version of the game
@@ -53,8 +65,8 @@ jobs:
         with:
           args: -d -g classic -w 25252
 
-      - name: Upload Build Artifacts
+      - name: Upload Classic Artifact
         uses: actions/upload-artifact@v2
         with:
-          name: builds
-          path: .release/*.zip
+          name: b${{ env.folder_name }}-${{ github.sha }}-classic
+          path: .release/*/
