@@ -41,6 +41,7 @@ jobs:
 
       - name: Set Folder Name
         run: |
+          ls -l
           cd .release
           echo "folder_name=$(ls -d */)" >> $GITHUB_ENV
           cd ..
