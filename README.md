@@ -16,8 +16,6 @@ SurroundFix is a simple and lightweight AddOn that fixes the problems associated
 
 Configure various options with /sfix or /surroundfix. You can change the aspect with "/sfix aspect x:y", or set it back to automatic mode with "/sfix aspect auto". Just type the command and any arguments for more help!
 
-**Note** - Certain AddOns will not be positioned correctly, and moving them will be strange. Unfortunately there isn't much I can do about this, since it's an issue with how the AddOn causing issues handles it's frames. Any AddOn that is designed to properly use UIParent should have no issues.
-
 
 ![Before](Other%20Files/Images/SFix%20Default.jpg)
 ![After](Other%20Files/Images/SFix%20Fixed.jpg)
@@ -30,3 +28,5 @@ This is a much better solution than manually positioning every UI element, and a
 
 # Known Bugs  
 - If you're a crazy person who has a 21:9 display with two side 4:3 displays, the UI will be 16:9. It's either this or potentially have issues with bezel correction. =p
+
+- Certain AddOns will not be positioned correctly, and moving them will be strange. Unfortunately there isn't much I can do about this, since it's an issue with how the AddOn causing issues handles it's frames. Any AddOn that is designed to properly use UIParent should have no issues.
