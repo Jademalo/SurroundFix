@@ -49,3 +49,8 @@ jobs:
         uses: BigWigsMods/packager@master
         with:
           args: -g classic -w 25252
+
+      - name: Package and Release for Burning Crusade
+        uses: BigWigsMods/packager@master
+        with:
+          args: -g bc -w 25252

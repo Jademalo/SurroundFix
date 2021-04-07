@@ -69,13 +69,28 @@ jobs:
       - name: Package for Classic
         uses: BigWigsMods/packager@master
         with:
-          args: -d -g classic -w 25252
+          args: -d -g classic
 
       # upload the artifact for classic
       - name: Upload Classic Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.folder_name }}-${{ env.version }}-classic
+          path: |
+            .release/*/
+            !.release/*.zip
+
+        # package for burning crusade
+      - name: Package for Classic
+        uses: BigWigsMods/packager@master
+        with:
+          args: -d -g bc
+
+      # upload the artifact for burning crusade
+      - name: Upload Classic Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ env.folder_name }}-${{ env.version }}-bc
           path: |
             .release/*/
             !.release/*.zip
