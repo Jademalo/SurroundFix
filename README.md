@@ -1,8 +1,8 @@
 # SurroundFix
 [CurseForge](https://www.curseforge.com/wow/addons/surroundfix)  
 [WoW Interface](https://www.wowinterface.com/downloads/info25251-SurroundFix.html)  
-[WoW Interface (Classic)](https://www.wowinterface.com/downloads/info25252-SurroundFixClassic.html)
-[WoW Interface (TBC)](https://www.wowinterface.com/downloads/info25949-SurroundFixTBC.html)
+[WoW Interface (Classic)](https://www.wowinterface.com/downloads/info25252-SurroundFixClassic.html)  
+[WoW Interface (TBC)](https://www.wowinterface.com/downloads/info25949-SurroundFixTBC.html)  
 
 SurroundFix is a simple and lightweight AddOn that fixes the problems associated with running WoW at Surround/Eyefinity/Triplewide resolutions!
 
