@@ -81,13 +81,13 @@ jobs:
             !.release/*.zip
 
         # package for burning crusade
-      - name: Package for Classic
+      - name: Package for Burning Crusade
         uses: BigWigsMods/packager@master
         with:
           args: -d -g bc
 
       # upload the artifact for burning crusade
-      - name: Upload Classic Artifact
+      - name: Upload Burning Crusade Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.folder_name }}-${{ env.version }}-bc
