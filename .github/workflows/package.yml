@@ -84,7 +84,7 @@ jobs:
       - name: Package for Burning Crusade
         uses: BigWigsMods/packager@master
         with:
-          args: -d -g bc
+          args: -d -g bcc
 
       # upload the artifact for burning crusade
       - name: Upload Burning Crusade Artifact
