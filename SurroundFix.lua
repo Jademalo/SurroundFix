@@ -1,10 +1,14 @@
 --------------------------------------------
---Check for Classic or Retail
+--Check for project type
 --------------------------------------------
 local isClassic = false
 
-if WOW_PROJECT_ID == 2 then
+if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
     isClassic = true
+end
+
+if WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC then
+    isBCClassic = true
 end
 
 
@@ -68,6 +72,8 @@ end
 local function sfixAnnounce() --Chatspam function
     if isClassic then
         print("~SurroundFix Classic~")
+    elseif isBCClassic then
+            print("~SurroundFix Burning Crusade Classic~")
     else
         print("~SurroundFix~")
     end
