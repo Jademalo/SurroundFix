@@ -1,4 +1,5 @@
 https://www.curseforge.com/wow/addons/surroundfix
+https://addons.wago.io/addons/surroundfix
 https://www.wowinterface.com/downloads/info25251-SurroundFix.html
 https://www.wowinterface.com/downloads/info25252-SurroundFixClassic.html
 https://www.wowinterface.com/downloads/info25949-SurroundFixBCC.html
