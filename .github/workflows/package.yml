@@ -44,7 +44,7 @@ jobs:
       - name: Package
         uses: BigWigsMods/packager@master
         with:
-          args: -d -g classic,bcc
+          args: -d -g 1.13.7,2.5.1,9.0.5
 
       # add variables for the name of the folder being added as an artifact
       - name: Set Name Variables

@@ -43,4 +43,4 @@ jobs:
       - name: Package and Release
         uses: BigWigsMods/packager@master
         with:
-          args: -g classic,bcc
+          args: -g 1.13.7,2.5.1,9.0.5
