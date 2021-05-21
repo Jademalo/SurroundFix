@@ -1,0 +1,18 @@
+## Interface: 11307
+
+## Title: SurroundFix Classic
+## Notes: A fix for various UI issues with multiple monitor setups
+
+## Version: @project-version@
+
+## Author: @project-author@
+
+## X-Curse-Project-ID: 300214
+## X-WoWI-ID: 25251
+## X-Wago-ID: e56nBm69
+
+
+## SavedVariables: sfixForceAspect, sfixXAspect, sfixYAspect
+
+## Core ##
+SurroundFix.lua
