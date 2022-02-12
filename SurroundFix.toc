@@ -1,7 +1,7 @@
 ## Interface: 90005
-## Interface-Retail: 90005
-## Interface-Classic: 11307
-## Interface-BCC: 20501
+## Interface-Retail: 900105
+## Interface-Classic: 11401
+## Interface-BCC: 20503
 
 ## Title: SurroundFix
 ## Notes: A fix for various UI issues with multiple monitor setups
