@@ -2,6 +2,7 @@
 --Check for project type
 --------------------------------------------
 local isClassic = false
+local isBCClassic = false
 
 if WOW_PROJECT_ID == WOW_PROJECT_CLASSIC then
     isClassic = true
