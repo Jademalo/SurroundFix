@@ -29,6 +29,8 @@ This is a much better solution than manually positioning every UI element, and a
 
 
 # Known Bugs  
-- If you're a crazy person who has a 21:9 display with two side 4:3 displays, the UI will be 16:9. It's either this or potentially have issues with bezel correction. =p
-
 - Certain AddOns will not be positioned correctly, and moving them will be strange. Unfortunately there isn't much I can do about this, since it's an issue with how the AddOn causing issues handles it's frames. Any AddOn that is designed to properly use UIParent should have no issues.
+
+- If you for some reason have a 21:9 display with two side 4:3 displays, the UI will be 16:9. It's either this or potentially have issues with bezel correction.
+
+- If the aspect is set to a compact aspect such as 4:3, after a reload the main bar will be anchored to the bottom left of the screen instead of the centre to prevent overlap with the menu bar. If you then change to a wider aspect such as 16:9, the bottom bar will be offset to the left. This is fixed after a `/reload`, and is behaviour of the default Blizzard UI.
