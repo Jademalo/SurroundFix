@@ -27,10 +27,10 @@ local aspect = "unknown"
 local hookSet
 local parentDefault = true
 
-if not SfixForceAspect then
-    SfixForceAspect = 0 --Set this to nil if it doesn't already exist
-    SfixXAspect = 0 --Do the same for these to initialise them
-    SfixYAspect = 0
+if not SfixForceAspect then --Initialise manual variables if SfixForceAspect doesn't already exist. This tests for nil, not 0.
+    SfixForceAspect = 0
+    SfixXAspect = 16
+    SfixYAspect = 9
 end
 
 SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix"; --Setting the slash commands available
