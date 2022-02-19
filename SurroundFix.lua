@@ -27,8 +27,10 @@ local aspect = "unknown"
 local hookSet
 local parentDefault = true
 
-if not sfixForceAspect then
-    sfixForceAspect = 0 --Set this to nil if it doesn't already exist
+if not SfixForceAspect then
+    SfixForceAspect = 0 --Set this to nil if it doesn't already exist
+    SfixXAspect = 0 --Do the same for these to initialise them
+    SfixYAspect = 0
 end
 
 SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix"; --Setting the slash commands available
@@ -43,7 +45,7 @@ local function uiResolution()
     xRes = GetScreenWidth() --Get the Horizontal resolution of the setup
     yResDiv = yRes / 9
 
-    if sfixForceAspect == 0 then --Check if the aspect mode is set to automatic
+    if SfixForceAspect == 0 then --Check if the aspect mode is set to automatic
 
         if xRes > (yResDiv * 21) then --If it's bigger than a 21:9 monitor (so multiple monitors)
             if xRes >= (yResDiv * 53) then --Figure out if at least one display is Ultrawide
@@ -61,9 +63,9 @@ local function uiResolution()
             end
         end
 
-    elseif sfixForceAspect == 1 then --Check if it is forcing a specific aspect ratio
-        xRes = ((yRes / sfixYAspect) * sfixXAspect) --Calculate the Horizontal resolution of the middle display relative to the aspect provided manually
-        aspect = sfixXAspect..":"..sfixYAspect
+    elseif SfixForceAspect == 1 then --Check if it is forcing a specific aspect ratio
+        xRes = ((yRes / SfixYAspect) * SfixXAspect) --Calculate the Horizontal resolution of the middle display relative to the aspect provided manually
+        aspect = SfixXAspect..":"..SfixYAspect
     end
 
 
@@ -79,7 +81,7 @@ local function sfixAnnounce() --Chatspam function
         print("~SurroundFix~")
     end
 
-    if sfixForceAspect == 0 then
+    if SfixForceAspect == 0 then
         if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
             print("Automatic mode - Single display detected")
         else
@@ -108,7 +110,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     hookSet = true --Sets hookSet to true so it doesn't trigger from itsself
     uiResolution()
 
-    if GetScreenWidth() <= (yResDiv * 21) and parentDefault and sfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
+    if GetScreenWidth() <= (yResDiv * 21) and parentDefault and SfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = nil
         return
     end
@@ -129,16 +131,16 @@ local function slashHandler(msg, editBox)
 
         if xAspect ~= "" and yAspect ~= "" and rest == "" then --If there's a number in xAspect and yAspect, and there's nothing else
 
-            sfixForceAspect = 1
-            sfixXAspect = tonumber(xAspect) --Set global
-            sfixYAspect = tonumber(yAspect) --Set global
+            SfixForceAspect = 1
+            SfixXAspect = tonumber(xAspect) --Set global
+            SfixYAspect = tonumber(yAspect) --Set global
             UIParent:SetPoint("CENTER")
             sfixAnnounce()
 
         elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
 
             if rest == "auto" then --If the command is /sfix aspect [auto]
-                sfixForceAspect = 0
+                SfixForceAspect = 0
                 UIParent:SetPoint("CENTER")
                 sfixAnnounce()
             else --If the command is /sfix aspect [something else]
