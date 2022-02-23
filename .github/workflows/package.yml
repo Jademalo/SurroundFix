@@ -42,7 +42,7 @@ jobs:
 
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package
-        uses: BigWigsMods/packager@master
+        uses: BigWigsMods/packager@v2
         with:
           args: -d
 
@@ -53,44 +53,11 @@ jobs:
           cd .release
           echo "folder_name=$(ls -d */ | sed 's:/*$::')" >> $GITHUB_ENV
 
-      # upload the artifact for retail
-      - name: Upload Retail Artifact
+      # upload the artifact
+      - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.folder_name }}-${{ env.version }}
-          path: |
-            .release/*/
-            !.release/*.zip
-
-
-      # another example where we supply additional arguments, this example is specifically to release
-      # for the Classic version of the game
-      # the -g arg releases with all cassic tags, and the -w arg changes the WOWI ID for classic only
-      - name: Package for Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -d -g classic
-
-      # upload the artifact for classic
-      - name: Upload Classic Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.folder_name }}-${{ env.version }}-classic
-          path: |
-            .release/*/
-            !.release/*.zip
-
-        # package for burning crusade
-      - name: Package for Burning Crusade Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -d -g bcc
-
-      # upload the artifact for burning crusade
-      - name: Upload Burning Crusade Classic Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ env.folder_name }}-${{ env.version }}-bcc
           path: |
             .release/*/
             !.release/*.zip

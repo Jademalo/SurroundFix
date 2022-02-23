@@ -1,4 +1,5 @@
 package-as: SurroundFix
+enable-toc-creation: yes
 
 ignore:
   - README.md
