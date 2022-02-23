@@ -41,17 +41,4 @@ jobs:
 
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package and Release
-        uses: BigWigsMods/packager@master
-
-      # another example where we supply additional arguments, this example is specifically to release
-      # for the Classic version of the game
-      # the -g arg releases with all cassic tags, and the -w arg changes the WOWI ID for classic only
-      - name: Package and Release for Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g classic -w 25252
-
-      - name: Package and Release for Burning Crusade Classic
-        uses: BigWigsMods/packager@master
-        with:
-          args: -g bcc -w 25949
+        uses: BigWigsMods/packager@v2
