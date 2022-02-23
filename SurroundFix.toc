@@ -1,6 +1,6 @@
 ## Interface: 90200
 ## Interface-Retail: 90200
-## Interface-Vanilla: 11401
+## Interface-Vanilla: 11402
 ## Interface-TBC: 20503
 
 ## Title: SurroundFix
