@@ -31,7 +31,7 @@ jobs:
         WITH_V: true
         DEFAULT_BUMP: patch
   tag_manual:
-    if: github.event.workflow_dispatch == true
+    if: github.event.workflow_dispatch != null
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
