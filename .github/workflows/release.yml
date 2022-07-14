@@ -44,6 +44,13 @@ jobs:
           # which is useful for controlling the length of the automated changelog
           fetch-depth: 50
 
+      # Checkout the latest tag to prevent the duplicate run check
+      - name: Checkout latest tag
+        run: |
+          git fetch --tags
+          latestTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+          git checkout $latestTag
+
       # once cloned, we just run the GitHub Action for the packager project
       - name: Package and Release
         uses: BigWigsMods/packager@v2
