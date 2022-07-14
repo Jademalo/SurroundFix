@@ -31,7 +31,7 @@ jobs:
         WITH_V: true
         DEFAULT_BUMP: patch
   tag_manual:
-    if: github.event.workflow_dispatch != ''
+    if: "${{ github.event.inputs.bumpLevel != '' }}"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
