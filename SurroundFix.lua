@@ -1,8 +1,9 @@
 --------------------------------------------
 --Check for project type
 --------------------------------------------
-local isVanilla = (WOW_PROJECT_ID == WOW_PROJECT_CLASSIC)
-local isTBC = (WOW_PROJECT_ID == WOW_PROJECT_BURNING_CRUSADE_CLASSIC)
+local isVanilla = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CLASSIC)
+local isTBC = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE)
+local isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
 
 
 
@@ -69,6 +70,8 @@ local function sfixAnnounce() --Chatspam function
         print("~SurroundFix Classic~")
     elseif isTBC then
         print("~SurroundFix Burning Crusade Classic~")
+    elseif isWrath then
+        print("~SurroundFix Wrath of the Lich King Classic~")
     else
         print("~SurroundFix~")
     end
