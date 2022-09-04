@@ -106,15 +106,15 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     uiResolution()
 
     if GetScreenWidth() <= (yResDiv * 21) and parentDefault and SfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
-        hookSet = nil
+        hookSet = false
         return
     end
 
-    parentDefault = nil --Set this to nil forever, since there's no longer the default UIParent behaviour
+    parentDefault = false --Set this to false forever, since there's no longer the default UIParent behaviour
     self:SetSize(xRes, yRes) --self is UIParent since that's what the hook is
     self:ClearAllPoints()
     self:SetPoint("CENTER")
-    hookSet = nil
+    hookSet = false
 
 end
 
