@@ -169,22 +169,20 @@ sfixFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 --------------------------------------------------------------------------------
 --Event Handler
 --------------------------------------------------------------------------------
-sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially saying "On an event, run this function of everything below"
+sfixFrame:SetScript("OnEvent", function(self, event, arg1, arg2) --This is essentially saying "On an event, run this function of everything below"
 
-if event == "ADDON_LOADED" and addonName == ... then
+if event == "ADDON_LOADED" and arg1 == addonName then
     sfixFrame:UnregisterEvent("ADDON_LOADED")
     hooksecurefunc(UIParent, "SetPoint", UIParentHook) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
 end
 
-if event == "PLAYER_ENTERING_WORLD" then
-    sfixFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
-    UIParent:SetPoint("CENTER")
+if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the first two args to see if it's first login or a reload
     sfixAnnounce() --Prints the chatspam when everything has loaded and the player enters the world, here rather than in ADDON_LOADED to prevent an error
     sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") --This is here to prevent this event firing on /reload and doubling messages
 end
 
-if event == "PLAYER_REGEN_ENABLED" then
-    UIParent:SetPoint("CENTER") --Fires the hook after leaving combat, to fix it if it happens during combat
+if event == ("PLAYER_ENTERING_WORLD" or "PLAYER_REGEN_ENABLED") then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat
+    UIParent:SetPoint("CENTER")
 end
 
 if event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when the events happen
