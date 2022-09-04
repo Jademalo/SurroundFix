@@ -181,7 +181,7 @@ if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the fi
     sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") --This is here to prevent this event firing on /reload and doubling messages
 end
 
-if event == ("PLAYER_ENTERING_WORLD" or "PLAYER_REGEN_ENABLED") then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat
+if event == "PLAYER_ENTERING_WORLD" or event == "PLAYER_REGEN_ENABLED" then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat
     UIParent:SetPoint("CENTER")
 end
 
