@@ -171,13 +171,14 @@ sfixFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
 --------------------------------------------------------------------------------
 sfixFrame:SetScript("OnEvent", function(self, event, ...) --This is essentially saying "On an event, run this function of everything below"
 
-    if event == "ADDON_LOADED" and addonName == ... then
+if event == "ADDON_LOADED" and addonName == ... then
     sfixFrame:UnregisterEvent("ADDON_LOADED")
     hooksecurefunc(UIParent, "SetPoint", UIParentHook) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
 end
 
 if event == "PLAYER_ENTERING_WORLD" then
     sfixFrame:UnregisterEvent("PLAYER_ENTERING_WORLD")
+    UIParent:SetPoint("CENTER")
     sfixAnnounce() --Prints the chatspam when everything has loaded and the player enters the world, here rather than in ADDON_LOADED to prevent an error
     sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") --This is here to prevent this event firing on /reload and doubling messages
 end
