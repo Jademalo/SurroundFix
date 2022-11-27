@@ -12,6 +12,7 @@ local isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
 --------------------------------------------------------------------------------
 local addonName = ...
 local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
+local clipFrame = CreateFrame("Frame", "SurroundFixClipFrame", UIParent)
 local rateLimit = 0.1 --Min time between the script being invoked from an event call
 local yRes = 1 --Get the Vertical resolution of the setup
 local xRes = 1 --Get the Horizontal resolution of the setup
@@ -96,6 +97,15 @@ local function sfixAnnounce() --Chatspam function
 end
 
 
+local function ClipFrameSetup()
+
+    clipFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+    clipFrame:SetClipsChildren(true) --Any children of this frame will only be visible within the frame
+    CompactRaidFrameManager:SetParent(clipFrame) --Set the Compact Raid Frame Manager to be a child of clipFrame
+
+end
+
+
 local function UIParentHook(self) --self is needed so it gets passed in on the hook
 
     if hookSet or InCombatLockdown() then --Makes it so that if hookSet is true or if in combat lockdown, it doesn't run the changes.
@@ -114,6 +124,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     self:SetSize(xRes, yRes) --self is UIParent since that's what the hook is
     self:ClearAllPoints()
     self:SetPoint("CENTER")
+    clipFrame:SetSize(xRes, yRes)
     hookSet = false
 
 end
@@ -174,6 +185,7 @@ sfixFrame:SetScript("OnEvent", function(self, event, arg1, arg2) --This is essen
 if event == "ADDON_LOADED" and arg1 == addonName then
     sfixFrame:UnregisterEvent("ADDON_LOADED")
     hooksecurefunc(UIParent, "SetPoint", UIParentHook) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
+    ClipFrameSetup() --Set up the clip frame
 end
 
 if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the first two args to see if it's first login or a reload
