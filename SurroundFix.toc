@@ -6,6 +6,7 @@
 
 ## Title: SurroundFix
 ## Notes: A fix for various UI issues with multiple monitor setups
+## IconTexture: Interface\AddOns\SurroundFix\icon.tga
 
 ## Version: @project-version@
 
