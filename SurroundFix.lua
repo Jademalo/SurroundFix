@@ -174,6 +174,7 @@ end
 sfixFrame:RegisterEvent("ADDON_LOADED")
 sfixFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 sfixFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+sfixFrame:RegisterEvent("UI_SCALE_CHANGED")
 
 
 
@@ -193,7 +194,7 @@ if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the fi
     sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") --This is here to prevent this event firing on /reload and doubling messages
 end
 
-if event == "PLAYER_ENTERING_WORLD" or "PLAYER_REGEN_ENABLED" then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat
+if event == "PLAYER_ENTERING_WORLD" or "PLAYER_REGEN_ENABLED" or "UI_SCALE_CHANGED" then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat and changing UI Scale
     UIParent:SetPoint("CENTER")
 end
 
