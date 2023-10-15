@@ -2,7 +2,7 @@
 ## Interface-Retail: 100107
 ## Interface-Vanilla: 11402
 ## Interface-TBC: 20503
-## Interface-Wrath: 30402
+## Interface-Wrath: 30403
 
 ## Title: SurroundFix
 ## Notes: A fix for various UI issues with multiple monitor setups
