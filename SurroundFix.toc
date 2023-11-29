@@ -15,7 +15,7 @@
 ## X-Curse-Project-ID: 300214
 ## X-WoWI-ID: 25251
 ## X-Wago-ID: e56nBm69
-
+## X-Github: https://github.com/Jademalo/SurroundFix
 
 ## SavedVariables: SfixForceAspect, SfixXAspect, SfixYAspect
 
