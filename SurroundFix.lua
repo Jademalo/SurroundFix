@@ -99,7 +99,7 @@ end
 
 local function ClipFrameSetup()
 
-    clipFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0)
+    clipFrame:SetAllPoints()
     clipFrame:SetClipsChildren(true) --Any children of this frame will only be visible within the frame
     CompactRaidFrameManager:SetParent(clipFrame) --Set the Compact Raid Frame Manager to be a child of clipFrame
 
@@ -115,16 +115,18 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     hookSet = true --Sets hookSet to true so it doesn't trigger from itsself
     uiResolution()
 
-    if GetScreenWidth() <= (yResDiv * 21) and parentDefault and SfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
+    local screenWidth = GetScreenWidth()
+
+    if screenWidth <= (yResDiv * 21) and parentDefault and SfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = false
         return
     end
 
+    local leftOffset = (screenWidth - xRes) / 2
+
     parentDefault = false --Set this to false forever, since there's no longer the default UIParent behaviour
-    self:SetSize(xRes, yRes) --self is UIParent since that's what the hook is
-    self:ClearAllPoints()
-    self:SetPoint("CENTER")
-    clipFrame:SetSize(xRes, yRes)
+    self:SetPoint("TOPLEFT", leftOffset, 0) --self is UIParent since that's what the hook is
+    self:SetPoint("BOTTOMRIGHT", -leftOffset, 0)
     hookSet = false
 
 end
@@ -140,14 +142,14 @@ local function slashHandler(msg, editBox)
             SfixForceAspect = 1
             SfixXAspect = tonumber(xAspect) --Set global
             SfixYAspect = tonumber(yAspect) --Set global
-            UIParent:SetPoint("CENTER")
+            UIParent:SetPoint("TOPLEFT")
             sfixAnnounce()
 
         elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
 
             if rest == "auto" then --If the command is /sfix aspect [auto]
                 SfixForceAspect = 0
-                UIParent:SetPoint("CENTER")
+                UIParent:SetPoint("TOPLEFT")
                 sfixAnnounce()
             else --If the command is /sfix aspect [something else]
                 print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
@@ -158,7 +160,7 @@ local function slashHandler(msg, editBox)
         end
 
     elseif command == "refresh" then --If the command is refresh
-        UIParent:SetPoint("CENTER")
+        UIParent:SetPoint("TOPLEFT")
         sfixAnnounce()
     else --If the command is /sfix [anything not defined]
         print("SurroundFix - Usage: \'/sfix [aspect | refresh]\' - Use aspect to change how the aspect ratio is calculated, or refresh to force a refresh")
@@ -195,12 +197,12 @@ if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the fi
 end
 
 if event == "PLAYER_ENTERING_WORLD" or "PLAYER_REGEN_ENABLED" or "UI_SCALE_CHANGED" then --This fires on all loading screens to make sure the UI is set, as well as when leaving combat and changing UI Scale
-    UIParent:SetPoint("CENTER")
+    UIParent:SetPoint("TOPLEFT")
 end
 
 if event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when the events happen
     sfixFrame:UnregisterEvent("DISPLAY_SIZE_CHANGED") --Unregister the events so it doesn't spam
-    C_Timer.After(rateLimit, function() UIParent:SetPoint("CENTER") sfixAnnounce() sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
+    C_Timer.After(rateLimit, function() UIParent:SetPoint("TOPLEFT") sfixAnnounce() sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
 end
 
 end)
