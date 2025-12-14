@@ -3,7 +3,7 @@
 ### Interface-TBC: 20503 
 ### Interface-Wrath: 30403
 ### Interface-Cata: 40402
-## Interface-Mists: 50502
+## Interface-Mists: 50503
 
 ## Title: SurroundFix
 ## Notes: A fix for various UI issues with multiple monitor setups
