@@ -1,16 +1,7 @@
---------------------------------------------
---Check for project type
---------------------------------------------
-local isVanilla = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_CLASSIC)
-local isTBC = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_BURNING_CRUSADE)
-local isWrath = (LE_EXPANSION_LEVEL_CURRENT == LE_EXPANSION_NORTHREND)
-
-
-
 --------------------------------------------------------------------------------
 --Variables
 --------------------------------------------------------------------------------
-local addonName = ...
+local addonName, SurroundFix = ...
 local sfixFrame = CreateFrame("Frame", "SurroundFixFrame")
 local clipFrame = CreateFrame("Frame", "SurroundFixClipFrame", UIParent)
 local rateLimit = 0.1 --Min time between the script being invoked from an event call
@@ -21,14 +12,7 @@ local aspect = "unknown"
 local hookSet
 local parentDefault = true
 
-if not SfixForceAspect then --Initialise manual variables if SfixForceAspect doesn't already exist. This tests for nil, not 0.
-    SfixForceAspect = 0
-    SfixXAspect = 16
-    SfixYAspect = 9
-end
-
-SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix"; --Setting the slash commands available
-
+local function aspectMode() return Settings.GetSetting(addonName.."_aspectMode"):GetValue() end
 
 
 --------------------------------------------------------------------------------
@@ -39,7 +23,7 @@ local function uiResolution()
     xRes = GetScreenWidth() --Get the Horizontal resolution of the setup
     yResDiv = yRes / 9
 
-    if SfixForceAspect == 0 then --Check if the aspect mode is set to automatic
+    if aspectMode() == 0 then --Check if the aspect mode is set to automatic
 
         if xRes > (yResDiv * 21) then --If it's bigger than a 21:9 monitor (so multiple monitors)
             if xRes >= (yResDiv * 53) then --Figure out if at least one display is Ultrawide
@@ -56,44 +40,42 @@ local function uiResolution()
                 aspect = "16:9"
             end
         end
-
-    elseif SfixForceAspect == 1 then --Check if it is forcing a specific aspect ratio
-        xRes = ((yRes / SfixYAspect) * SfixXAspect) --Calculate the Horizontal resolution of the middle display relative to the aspect provided manually
-        aspect = SfixXAspect..":"..SfixYAspect
+    elseif aspectMode() == 1 then
+        xRes = ((yRes / 9) * 16)
+        aspect = "16:9"
+    elseif aspectMode() == 2 then
+        xRes = ((yRes / 10) * 16)
+        aspect = "16:10"
+    elseif aspectMode() == 3 then
+        xRes = ((yRes / 9) * 21)
+        aspect = "21:9"
+    elseif aspectMode() == 4 then
+        xRes = ((yRes / 3) * 4)
+        aspect = "4:3"
+    elseif aspectMode() == 5 then --Check if it is forcing a specific aspect ratio
+        xRes = ((yRes / SfixDB.YAspect) * SfixDB.XAspect) --Calculate the Horizontal resolution of the middle display relative to the aspect provided manually
+        aspect = SfixDB.XAspect..":"..SfixDB.YAspect
     end
 
 
 end
 
 
-local function sfixAnnounce() --Chatspam function
-    if isVanilla then
-        print("~SurroundFix Classic~")
-    elseif isTBC then
-        print("~SurroundFix Burning Crusade Classic~")
-    elseif isWrath then
-        print("~SurroundFix Wrath of the Lich King Classic~")
-    else
-        print("~SurroundFix~")
-    end
+function SurroundFix.sfixAnnounce() --Chatspam function
+    print("~SurroundFix~")
 
-    if SfixForceAspect == 0 then
+    if aspectMode() == 0 then
         if GetScreenWidth() <= (yResDiv * 21) then --If it's smaller than or equal to a 21:9 monitor (so single monitor), Print this
-            print("Automatic mode - Single display detected")
+            print("Auto - Single display detected")
         else
-            print("Automatic mode - Middle display detected as", aspect)
+            print("Auto - Middle display detected as", aspect)
         end
+    elseif aspectMode() == 5 then
+        print("Custom - UI set to", aspect)
     else
-        print("Manual mode - UI set to", aspect)
+        print("Manual - UI set to", aspect)
     end
 
---[[
-    if parentDefault then --If we haven't touched the default UIParent behaviour, use a different message.
-        print("Leaving UIParent as default")
-    else
-        print("Setting UI Resolution to "..floor(xRes + 0.5).."x"..floor(yRes + 0.5))
-    end
---]]
 end
 
 
@@ -117,7 +99,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
 
     local screenWidth = GetScreenWidth()
 
-    if screenWidth <= (yResDiv * 21) and parentDefault and SfixForceAspect == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
+    if screenWidth <= (yResDiv * 21) and parentDefault and aspectMode() == 0 then --If it's smaller than or equal to a 21:9 monitor (so single monitor) and auto mode is selected, do nothing until it's been changed.
         hookSet = false
         return
     end
@@ -130,44 +112,6 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     hookSet = false
 
 end
-
-
-local function slashHandler(msg, editBox)
-    local command, xAspect, yAspect, rest = msg:match("^(%S*)%s*(%d*):?(%d*)(.-)$") --Set command to the first bit of text before whitespace, set xaspect to the first number, set yaspect to the number after a colon, and set remaining to rest
-
-    if command == "aspect" then --If the command is aspect
-
-        if xAspect ~= "" and yAspect ~= "" and rest == "" then --If there's a number in xAspect and yAspect, and there's nothing else
-
-            SfixForceAspect = 1
-            SfixXAspect = tonumber(xAspect) --Set global
-            SfixYAspect = tonumber(yAspect) --Set global
-            UIParent:SetPoint("TOPLEFT")
-            sfixAnnounce()
-
-        elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
-
-            if rest == "auto" then --If the command is /sfix aspect [auto]
-                SfixForceAspect = 0
-                UIParent:SetPoint("TOPLEFT")
-                sfixAnnounce()
-            else --If the command is /sfix aspect [something else]
-                print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
-            end
-
-        else --If the command is /sfix aspect [something other than an aspect ratio or auto]
-            print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
-        end
-
-    elseif command == "refresh" then --If the command is refresh
-        UIParent:SetPoint("TOPLEFT")
-        sfixAnnounce()
-    else --If the command is /sfix [anything not defined]
-        print("SurroundFix - Usage: \'/sfix [aspect | refresh]\' - Use aspect to change how the aspect ratio is calculated, or refresh to force a refresh")
-    end
-
-end
-
 
 
 --------------------------------------------------------------------------------
@@ -192,7 +136,7 @@ if event == "ADDON_LOADED" and arg1 == addonName then
 end
 
 if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the first two args to see if it's first login or a reload
-    sfixAnnounce() --Prints the chatspam when everything has loaded and the player enters the world, here rather than in ADDON_LOADED to prevent an error
+    SurroundFix.sfixAnnounce() --Prints the chatspam when everything has loaded and the player enters the world, here rather than in ADDON_LOADED to prevent an error
     sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") --This is here to prevent this event firing on /reload and doubling messages
 end
 
@@ -202,14 +146,8 @@ end
 
 if event == "DISPLAY_SIZE_CHANGED" then --Main part of the code that runs when the events happen
     sfixFrame:UnregisterEvent("DISPLAY_SIZE_CHANGED") --Unregister the events so it doesn't spam
-    C_Timer.After(rateLimit, function() UIParent:SetPoint("TOPLEFT") sfixAnnounce() sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
+    C_Timer.After(rateLimit, function() UIParent:SetPoint("TOPLEFT") SurroundFix.sfixAnnounce() sfixFrame:RegisterEvent("DISPLAY_SIZE_CHANGED") end) --After the rateLimit amount of time, reregister the events, run the main code again, and print to the chat box
 end
 
 end)
 
-
-
---------------------------------------------------------------------------------
---Slash Command Handler
---------------------------------------------------------------------------------
-SlashCmdList["SFIX"] = slashHandler;

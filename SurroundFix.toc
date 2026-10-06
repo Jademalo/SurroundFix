@@ -13,7 +13,8 @@
 ## X-Wago-ID: e56nBm69
 ## X-Github: https://github.com/Jademalo/SurroundFix
 
-## SavedVariables: SfixForceAspect, SfixXAspect, SfixYAspect
+## SavedVariables: SfixDB
 
 ## Core ##
+Options.lua
 SurroundFix.lua
