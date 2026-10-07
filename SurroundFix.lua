@@ -53,18 +53,15 @@ end
 
 --Chatspam function
 function SurroundFix.sfixAnnounce()
-    print("~SurroundFix~")
     local xAspect, yAspect = aspectCalc()
     local aspectRatio = xAspect..":"..yAspect
 
     if aspectMode() == 0 then
-        if xAspect > 30 then --If aspectCalc throws back an aspect instead of an actual resolution
-            print("Auto - Single display detected")
-        else
-            print("Auto - Middle display detected as", aspectRatio)
+        if xAspect < 30 then --If aspectCalc throws back an aspect instead of an actual resolution
+            print("SurroundFix - Middle display detected as", aspectRatio)
         end
     else
-        print("UI set to", aspectRatio)
+        print("SurroundFix - UI set to", aspectRatio)
     end
 end
 
