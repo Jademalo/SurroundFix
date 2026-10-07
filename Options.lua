@@ -30,7 +30,7 @@ local function slashHandler(msg, editBox)
         elseif xAspect == "" and yAspect == "" and rest ~= "" then --If the command is /sfix aspect [something]
             if rest == "auto" then --If the command is /sfix aspect [auto]
                 aspectMode:SetValue(0) --Set mode to auto
-                UIParent:SetPoint("TOPLEFT")
+                print("SurroundFix - Auto mode enabled")
             else --If the command is /sfix aspect [something other than an aspect ratio or auto]
                 print("SurroundFix - Usage: \'/sfix aspect [x:y | auto]\' - x:y sets a defined aspect ratio, or auto sets automatic detection")
             end            
