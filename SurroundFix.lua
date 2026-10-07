@@ -71,6 +71,20 @@ local function ClipFrameSetup()
     CompactRaidFrameManager:SetParent(clipFrame) --Set the Compact Raid Frame Manager to be a child of clipFrame
 end
 
+--Restrict screenshots to the size of UIParent
+function SurroundFix.restrictScreenshot()
+    local xRes, yRes = GetPhysicalScreenSize()
+    local xAspect, yAspect = aspectCalc(aspectMode())
+    local res
+
+    if Settings.GetSetting(addonName.."_restrictScreenshot"):GetValue() == true then
+        res = ((yRes / yAspect) * xAspect).."x"..yRes
+    else
+        res = "0x0"
+    end
+
+    SetCVar("screenshotSizeOverride", res)
+end
 
 local function UIParentHook(self) --self is needed so it gets passed in on the hook
 
@@ -92,6 +106,7 @@ local function UIParentHook(self) --self is needed so it gets passed in on the h
     parentDefault = false --Set this to false forever, since there's no longer the default UIParent behaviour
     self:SetPoint("TOPLEFT", leftOffset, 0) --self is UIParent since that's what the hook is
     self:SetPoint("BOTTOMRIGHT", -leftOffset, 0)
+    SurroundFix.restrictScreenshot() --Configure the cvar to restrict screenshot size
     hookSet = false
 
 end

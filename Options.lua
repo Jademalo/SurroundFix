@@ -84,6 +84,22 @@ local function aspectDropDown(category)
 
 end
 
+local function screenshotCheckbox(category)
+
+    local variable = "restrictScreenshot"
+    local name = "Restrict Screenshot"
+    local description = "Restrict screenshots to the width of the UI instead of the full width"
+    local defaultValue = true
+
+    local setting = Settings.RegisterAddOnSetting(category, addonName.."_"..variable, variable, SfixDB, type(defaultValue), name, defaultValue)
+    Settings.CreateCheckbox(category, setting, description)
+
+    Settings.GetSetting(addonName.."_"..variable):SetValueChangedCallback(function()
+        SurroundFix.restrictScreenshot()
+    end)
+
+end
+
 
 --------------------------------------------------------------------------------
 --Event Handler
@@ -102,6 +118,7 @@ optionsPanel:SetScript("OnEvent", function(self, event, arg1, arg2)
 
         --Add Items
         aspectDropDown(optionsCategory)
+        screenshotCheckbox(optionsCategory)
 
         --Initialise slash commands
         SLASH_SFIX1, SLASH_SFIX2 = "/sfix", "/surroundfix";
