@@ -14,7 +14,7 @@ SurroundFix is a simple and lightweight AddOn that fixes the problems associated
 - Will do nothing if using a single display, no need to disable it!
 - Ability to set a manual aspect ratio for the UI - Want 16:9 on your 21:9 monitor? No problem!
 
-Configure various options with /sfix or /surroundfix. You can change the aspect with "/sfix aspect x:y", or set it back to automatic mode with "/sfix aspect auto". Just type the command and any arguments for more help!
+Configure various options with /sfix or /surroundfix. Typing the command will open up the Blizzard AddOn options menu, allowing you to choose Auto or from a selection of common aspect ratios. You can also set a custom aspect with "/sfix aspect x:y". Just type the command and any arguments for more help!
 
 
 ![Before](Other%20Files/Images/SFix%20Default.jpg)
@@ -32,3 +32,5 @@ This is a much better solution than manually positioning every UI element, and a
 - If you for some reason have a 21:9 display with two side 4:3 displays, the UI will be 16:9. It's either this or potentially have issues with bezel correction.
 
 - If the aspect is set to a compact aspect such as 4:3, after a reload the main bar will be anchored to the bottom left of the screen instead of the centre to prevent overlap with the menu bar. If you then change to a wider aspect such as 16:9, the bottom bar will be offset to the left. This is fixed after a `/reload`, and is behaviour of the default Blizzard UI.
+
+- If a UI element is moved with edit mode, it will no longer obey the UIParent positioning system. This is due to objects positioning themselves relative to `"BOTTOM"` or `"TOP"` on `UIParent` if placed in the corners, resulting in them not being adjusted by SurroundFix. The only workaround is to position them slightly above the bottom or top edges so they anchor to `"LEFT"` or `"RIGHT"`.

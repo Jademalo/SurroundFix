@@ -15,9 +15,10 @@ Features
 - Will do nothing if using a single display, no need to disable it!
 - Ability to set a manual aspect ratio for the UI - Want 16:9 on your 21:9 monitor? No problem!
 
-Configure various options with /sfix or /surroundfix. You can change the aspect
-with "/sfix aspect x:y", or set it back to automatic mode with "/sfix aspect
-auto". Just type the command and any arguments for more help!
+Configure various options with /sfix or /surroundfix. Typing the command will open 
+up the Blizzard AddOn options menu, allowing you to choose Auto or from a selection 
+of common aspect ratios. You can also set a custom aspect with "/sfix aspect x:y". 
+Just type the command and any arguments for more help!
 
 For the curious, the mod essentially resizes the UIParent frame to the resolution
 of your middle monitor. This means that every UI element and AddOn sees a normal
