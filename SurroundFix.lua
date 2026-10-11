@@ -115,6 +115,7 @@ if event == "ADDON_LOADED" and arg1 == addonName then
     sfixFrame:UnregisterEvent("ADDON_LOADED")
     hooksecurefunc(UIParent, "SetPoint", UIParentHook) --Hooks into UIParent "SetPoint", so if anything tries to change that then it runs
     ClipFrameSetup() --Set up the clip frame
+    FramerateFrame:SetPoint("BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", -2, 2) --Position the framerate label at the bottom corner of UIParent instead of WorldFrame
 end
 
 if event == "PLAYER_ENTERING_WORLD" and (arg1 or arg2) then --This checks the first two args to see if it's first login or a reload
