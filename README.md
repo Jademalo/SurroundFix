@@ -17,8 +17,8 @@ SurroundFix is a simple and lightweight AddOn that fixes the problems associated
 Configure various options with /sfix or /surroundfix. Typing the command will open up the Blizzard AddOn options menu, allowing you to choose Auto or from a selection of common aspect ratios. You can also set a custom aspect with "/sfix aspect x:y". Just type the command and any arguments for more help!
 
 
-![Before](Other%20Files/Images/SFix%20Default.jpg)
-![After](Other%20Files/Images/SFix%20Fixed.jpg)
+![Before](.previews/SFix%20Default.jpg)
+![After](.previews/SFix%20Fixed.jpg)
 
 
 For the curious, the mod essentially resizes the UIParent frame to the resolution of your middle monitor. This means that every UI element and AddOn sees a normal sized display rather than a crazy wide one, so they perfectly orient themselves on the middle display.
